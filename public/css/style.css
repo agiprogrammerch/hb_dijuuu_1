@@ -1,0 +1,182 @@
+/* ============================================================
+   For Dijuuu — shared styles for every page
+   Dancing Script = romantic text · Poppins = body / hints / buttons
+   Only red hearts: #ff2d55
+   ============================================================ */
+
+:root {
+  --red-heart: #ff2d55;
+  --ink: #f6eef3;
+  --muted: #cfc0cc;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  font-family: 'Poppins', -apple-system, 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  color: var(--ink);
+  background: #000000;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.16); /* subtle glow on all text */
+  touch-action: manipulation;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg, canvas { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+/* ---------- page scaffold ---------- */
+
+.page {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bg-black { background: #000000; }
+
+.bg-romantic {
+  background: radial-gradient(ellipse at center, #3d001f 0%, #2d0018 40%, #1a0a1e 100%);
+}
+
+.center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.script { font-family: 'Dancing Script', cursive; font-weight: 600; }
+
+/* ---------- glowing text helpers ---------- */
+
+.glow-white { text-shadow: 0 0 10px rgba(255, 255, 255, 0.45), 0 0 34px rgba(255, 255, 255, 0.2); }
+.glow-soft  { text-shadow: 0 0 9px rgba(255, 255, 255, 0.3); }
+.glow-red   { color: var(--red-heart); text-shadow: 0 0 12px rgba(255, 45, 85, 0.75), 0 0 38px rgba(255, 45, 85, 0.35); }
+
+/* ---------- hint line ---------- */
+
+.hint {
+  min-height: 36px;
+  padding: 6px 26px 0;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--muted);
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
+  transition: opacity 0.7s ease;
+}
+.hint.gone { opacity: 0; }
+
+/* ---------- buttons (start invisible, fade in with .show) ---------- */
+
+.btn-glow,
+.btn-glass {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;               /* ≥ 44px touch target */
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease, transform 0.25s ease, box-shadow 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn-glow.show, .btn-glass.show { opacity: 1; pointer-events: auto; }
+.btn-glow:active, .btn-glass:active { transform: scale(0.96); }
+.btn-glow:focus-visible, .btn-glass:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.8); outline-offset: 4px; }
+
+.btn-glow {
+  border: 1px solid rgba(255, 45, 85, 0.8);
+  background: rgba(255, 45, 85, 0.09);
+  box-shadow: 0 0 18px rgba(255, 45, 85, 0.5), 0 0 46px rgba(255, 45, 85, 0.2), inset 0 0 12px rgba(255, 45, 85, 0.14);
+}
+
+.btn-glass {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.35), 0 0 50px rgba(255, 255, 255, 0.14);
+}
+
+/* ---------- glassy card ---------- */
+
+.card-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border-radius: 22px;
+}
+
+/* ---------- soft inner scrollbar ---------- */
+
+.scroll-soft {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 45, 85, 0.35) transparent;
+}
+.scroll-soft::-webkit-scrollbar { width: 4px; }
+.scroll-soft::-webkit-scrollbar-track { background: transparent; }
+.scroll-soft::-webkit-scrollbar-thumb { background: rgba(255, 45, 85, 0.35); border-radius: 4px; }
+
+/* ---------- reveal helpers ----------
+   .hidden-v  → invisible (opacity 0, no pointer events)
+   .show      → visible again (declared after .hidden-v so it wins)
+   .fx        → 1s fade transition (pages add their own transform rules)
+------------------------------------------------ */
+
+.hidden-v { opacity: 0 !important; pointer-events: none !important; }
+.show     { opacity: 1 !important; pointer-events: auto !important; }
+.fx       { transition: opacity 1s ease, transform 1s ease; }
+
+/* ---------- safe areas (iPhone) ---------- */
+
+.safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
+.safe-top    { padding-top: max(env(safe-area-inset-top), 14px); }
+
+/* ---------- red heart animations ---------- */
+
+.heart-beat { animation: heartBeat 2.2s ease-in-out infinite; transform-origin: center; }
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.12); }
+  24% { transform: scale(1); }
+  36% { transform: scale(1.09); }
+  48% { transform: scale(1); }
+}
+
+.pulse-soft { animation: pulseSoft 2.6s ease-in-out infinite; }
+@keyframes pulseSoft {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heart-beat, .pulse-soft { animation: none; }
+  .fx { transition: opacity 0.3s ease; }
+}

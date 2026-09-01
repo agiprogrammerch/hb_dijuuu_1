@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="theme-color" content="#1a0a1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Pieces of Us</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff2d55' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---------- header ---------- */
+    h1 {
+      font-size: clamp(24px, 6.5vw, 32px);
+      line-height: 1.25;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    /* ---------- progress hearts ---------- */
+    #progressRow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    #progressHearts {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    #progressHearts svg { width: 15px; height: 15px; }
+    .ph-off { fill: rgba(255, 45, 85, 0.18); }
+    .ph-on  { fill: #ff2d55; filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.7)); }
+    #progressText {
+      margin-left: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11.5px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    /* ---------- the grid (cards fill their cells → ≥44px tap targets) ---------- */
+    #grid {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      padding: 4px 18px 8px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 1fr;
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ---------- cards ---------- */
+    .card { position: relative; perspective: 900px; }
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1); /* 0.4s 3D flip */
+    }
+    .card.flipped .card-inner { transform: rotateY(180deg); }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .face-back { /* dark glassy card back with subtle glowing border */
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.08), inset 0 0 18px rgba(255, 255, 255, 0.04);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+    .face-front {
+      transform: rotateY(180deg);
+      background: rgba(18, 8, 22, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: clamp(30px, 9vw, 40px);
+    }
+    .card.matched .face-front {
+      border-color: rgba(255, 45, 85, 0.8);
+      box-shadow: 0 0 18px rgba(255, 45, 85, 0.45);
+    }
+    .sym { line-height: 1; }
+    .badge { display: none; position: absolute; top: 7px; right: 7px; } /* red heart overlay on matched pair */
+    .card.matched .badge { display: block; }
+    .card:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.6); outline-offset: 2px; border-radius: 16px; }
+
+    /* ---------- match / reassurance message ---------- */
+    .match-msg {
+      min-height: 46px;
+      padding: 4px 26px 0;
+      font-family: 'Poppins', sans-serif;
+      font-style: italic;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #f0d7de;
+      text-align: center;
+    }
+
+    /* ---------- win overlay ---------- */
+    .win-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.6);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      padding: 24px;
+    }
+    .win-heart {
+      width: 44px;
+      height: 44px;
+      filter: drop-shadow(0 0 14px rgba(255, 45, 85, 0.8));
+    }
+    .win-msg {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 600;
+      font-size: clamp(22px, 6vw, 30px);
+      line-height: 1.45;
+      text-align: center;
+      max-width: 330px;
+      margin: 20px 0 28px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page bg-romantic">
+
+    <header class="safe-top">
+      <h1 class="script glow-white">Pieces of Us</h1>
+    </header>
+
+    <div id="progressRow">
+      <div id="progressHearts" aria-hidden="true">
+        <svg id="ph0" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg id="ph1" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg id="ph2" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg id="ph3" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg id="ph4" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg id="ph5" class="ph-off" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <span id="progressText">0 / 6</span>
+    </div>
+
+    <p id="hint" class="hint">Find the matching pieces, Dijuuu.</p>
+
+    <div id="grid"></div>
+
+    <p id="msg" class="match-msg fx hidden-v safe-bottom glow-soft"></p>
+
+    <div id="winOverlay" class="win-overlay fx hidden-v center-col">
+      <svg class="win-heart heart-beat" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <p class="win-msg script glow-white">You found every piece, Dijuuu. Now let the universe show you the rest.</p>
+      <a id="universeBtn" class="btn-glow" href="page4.html">Enter the Universe</a>
+    </div>
+
+  </main>
+
+  <script src="js/game.js"></script>
+</body>
+</html>

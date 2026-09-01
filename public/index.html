@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>For Dijuuu</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff2d55' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    #starfield { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; }
+
+    .lock-view, .unlock-view {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lock-view { transition: opacity 1.5s ease; }
+    .lock-view.fade-out { opacity: 0; }
+
+    .pre-heart {
+      width: 26px;
+      height: 26px;
+      margin-bottom: 28px;
+      filter: drop-shadow(0 0 12px rgba(255,45,85,0.85));
+      animation: heartBeat 2.4s ease-in-out infinite;
+    }
+
+    .timer { display: flex; align-items: center; gap: 8px; }
+    .t-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 74px;
+      padding: 14px 0 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+    }
+    .t-num {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 28px rgba(255,255,255,0.2);
+      font-variant-numeric: tabular-nums;
+    }
+    .t-label {
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      color: #AAAAAA;
+      text-shadow: 0 0 8px rgba(255,255,255,0.15);
+    }
+    .t-sep {
+      font-family: 'Poppins', sans-serif;
+      font-size: 24px;
+      color: rgba(255,255,255,0.4);
+      padding-bottom: 22px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .wait-text {
+      margin-top: 34px;
+      max-width: 300px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #CCCCCC;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    .its-time {
+      font-size: clamp(46px, 13vw, 72px);
+      font-weight: 600;
+      color: #FFFFFF;
+      text-shadow: 0 0 16px rgba(255,255,255,0.6), 0 0 60px rgba(255,255,255,0.25);
+    }
+    .conf-text {
+      margin-top: 26px;
+      max-width: 320px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: #d9c8d6;
+      text-shadow: 0 0 10px rgba(255,255,255,0.25);
+    }
+    #enterBtn { margin-top: 34px; }
+
+    @media (max-width: 355px) {
+      .timer { gap: 5px; }
+      .t-unit { width: 62px; }
+      .t-num { font-size: 21px; }
+      .t-sep { font-size: 19px; }
+    }
+  </style>
+</head>
+<body class="bg-black">
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <main class="page">
+    <!-- locked state: countdown -->
+    <section id="lockView" class="lock-view">
+      <svg class="pre-heart" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+      <div class="timer" role="timer" aria-label="countdown to the surprise">
+        <div class="t-unit"><span class="t-num" id="dd">--</span><span class="t-label">DAYS</span></div>
+        <span class="t-sep" aria-hidden="true">:</span>
+        <div class="t-unit"><span class="t-num" id="hh">--</span><span class="t-label">HRS</span></div>
+        <span class="t-sep" aria-hidden="true">:</span>
+        <div class="t-unit"><span class="t-num" id="mm">--</span><span class="t-label">MINS</span></div>
+        <span class="t-sep" aria-hidden="true">:</span>
+        <div class="t-unit"><span class="t-num" id="ss">--</span><span class="t-label">SECS</span></div>
+      </div>
+      <p class="wait-text">The stars are not ready yet. Wait a little longer, Dijuuu.</p>
+    </section>
+
+    <!-- unlocked state -->
+    <section id="unlockView" class="unlock-view hidden-v">
+      <h1 id="itsTime" class="script its-time fx hidden-v">It's time.</h1>
+      <p id="confText" class="conf-text fx hidden-v">You are now entering the most confidential area. Only Dijuuu is allowed to enter.</p>
+      <a id="enterBtn" class="btn-glass" href="page1.html">Enter</a>
+    </section>
+  </main>
+
+  <script src="js/countdown.js"></script>
+</body>
+</html>

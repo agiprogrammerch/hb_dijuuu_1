@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="theme-color" content="#1a0a1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>One Last Thing</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff2d55' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ---------- page 5 · one last thing ---------- */
+
+    /* drifting red hearts, already mid-flight on load */
+    .drift-hearts {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .drift-hearts svg {
+      position: absolute;
+      top: 0;
+      pointer-events: none;
+      filter: drop-shadow(0 0 6px rgba(255, 45, 85, 0.55));
+    }
+    @keyframes driftUpA {
+      from { transform: translateY(105vh) rotate(-6deg); }
+      to   { transform: translateY(-12vh) rotate(9deg); }
+    }
+    @keyframes driftUpB {
+      from { transform: translateY(105vh) rotate(7deg); }
+      to   { transform: translateY(-12vh) rotate(-8deg); }
+    }
+    .dh1 { left: 6%;  width: 16px; height: 16px; opacity: 0.18; animation: driftUpA 12s linear infinite; animation-delay: -3s; }
+    .dh2 { left: 21%; width: 20px; height: 20px; opacity: 0.26; animation: driftUpB 15s linear infinite; animation-delay: -8s; }
+    .dh3 { left: 37%; width: 14px; height: 14px; opacity: 0.10; animation: driftUpA 10s linear infinite; animation-delay: -5s; }
+    .dh4 { left: 52%; width: 22px; height: 22px; opacity: 0.22; animation: driftUpB 16s linear infinite; animation-delay: -12s; }
+    .dh5 { left: 67%; width: 15px; height: 15px; opacity: 0.14; animation: driftUpA 11s linear infinite; animation-delay: -2s; }
+    .dh6 { left: 80%; width: 18px; height: 18px; opacity: 0.20; animation: driftUpB 13s linear infinite; animation-delay: -9s; }
+    .dh7 { left: 92%; width: 17px; height: 17px; opacity: 0.12; animation: driftUpA 9s  linear infinite; animation-delay: -6s; }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 430px;
+      flex: 1;
+      min-height: 0;
+      padding: 0 26px;
+      text-align: center;
+    }
+
+    #t1 {
+      font-size: clamp(28px, 8vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    #t2 {
+      font-size: clamp(19px, 5.5vw, 26px);
+      font-weight: 600;
+      line-height: 1.5;
+      margin-top: 18px;
+    }
+    #t3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 15px;
+      line-height: 1.8;
+      margin-top: 22px;
+    }
+    #t4 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.8;
+      margin-top: 18px;
+    }
+    #heart5 { margin-top: 24px; }
+    #heart5 svg {
+      width: 26px;
+      height: 26px;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 12px rgba(255, 45, 85, 0.8));
+    }
+    #homeBtn { margin-top: 20px; }
+
+    /* gentle rise on reveal (slide defined locally; .show only handles opacity) */
+    #t1.fx, #t2.fx, #t3.fx, #t4.fx, #heart5.fx { transform: translateY(18px); }
+    #t1.fx.show, #t2.fx.show, #t3.fx.show, #t4.fx.show, #heart5.fx.show { transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drift-hearts svg { animation: none; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page bg-romantic">
+
+    <div class="drift-hearts" aria-hidden="true">
+      <svg class="dh1" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh2" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh3" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh4" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh5" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh6" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <svg class="dh7" viewBox="0 0 24 24"><path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+
+    <section class="center-col content">
+      <p id="t1" class="script glow-white fx hidden-v">My surprises don't end here, Dijuuu.</p>
+      <p id="t2" class="script glow-soft fx hidden-v">There's still something I haven't shown you. Something I can't send through a screen.</p>
+      <p id="t3" class="glow-soft fx hidden-v">It's something you can wear. Something that will make a tiny sound whenever you move. Something that will fit you perfectly, because it was chosen only for you.</p>
+      <p id="t4" class="glow-soft fx hidden-v">I'm keeping it safe with me. And one day, I'll place it on you myself. Not as a gift from far away. But as a promise from someone who has loved you across every impossible mile.</p>
+      <div id="heart5" class="fx hidden-v">
+        <svg class="heart-beat" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#ff2d55" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+      <a id="homeBtn" class="btn-glow fx hidden-v" href="page1.html">Back to Home</a>
+    </section>
+
+  </main>
+
+  <script src="js/surprise.js"></script>
+</body>
+</html>

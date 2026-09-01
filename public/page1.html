@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="theme-color" content="#1a0a1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Happy Birthday, Dijuuu</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff2d55' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ============================================================
+       PAGE VEIL — everything under the intro fades in after 4 s
+       ============================================================ */
+    main.page { transition: opacity 1.15s ease; }
+    main.veiled { opacity: 0; }
+
+    /* ---------- header ---------- */
+    .p1-header {
+      text-align: center;
+      padding: 12px 22px 4px;
+      z-index: 5;
+    }
+    .p1-title {
+      font-size: clamp(34px, 9.5vw, 52px);
+      font-weight: 700;
+      line-height: 1.12;
+    }
+    .p1-sub {
+      margin: 8px auto 0;
+      max-width: 340px;
+      font-style: italic;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #d9c6d2;
+      text-shadow: 0 0 10px rgba(255,255,255,0.25);
+      transition: opacity 0.8s ease;
+    }
+    .p1-sub.gone { opacity: 0; }
+
+    /* ============================================================
+       INTRO OVERLAY — dark, subtle radial gradient, exactly 4 s
+       ============================================================ */
+    #introOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 110;
+      pointer-events: none;
+      overflow: hidden;
+      background: radial-gradient(ellipse 130% 95% at 50% 42%,
+                  #3a1227 0%, #1d0a19 48%, #0d040b 100%);
+      transition: opacity 0.7s ease;
+    }
+    #introOverlay.out { opacity: 0; }
+
+    /* wavy streamers sliding in from the left / right edges */
+    .streamer {
+      position: absolute;
+      height: 40px;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .streamer svg { width: 100%; height: 100%; }
+    .streamer.s-left  { left: 0;  animation: slideL var(--dur, 2.8s) cubic-bezier(0.3, 0.6, 0.35, 1) var(--delay, 0s) both; }
+    .streamer.s-right { right: 0; animation: slideR var(--dur, 2.8s) cubic-bezier(0.3, 0.6, 0.35, 1) var(--delay, 0s) both; }
+    @keyframes slideL {
+      0%   { transform: translateX(-104%) translateY(0); }
+      55%  { transform: translateX(-48%) translateY(12px); }
+      100% { transform: translateX(-1%) translateY(0); }
+    }
+    @keyframes slideR {
+      0%   { transform: translateX(104%) translateY(0); }
+      55%  { transform: translateX(48%) translateY(-12px); }
+      100% { transform: translateX(1%) translateY(0); }
+    }
+
+    /* ---------- intro title — fades in, slides up, glows + breathes ---------- */
+    #introTitle {
+      position: fixed;
+      left: 0; right: 0;
+      top: 50%;
+      margin: 0;
+      padding: 0 14px;
+      text-align: center;
+      z-index: 130;
+      pointer-events: none;
+      font-size: clamp(42px, 11.5vw, 68px);
+      font-weight: 700;
+      line-height: 1.12;
+      color: #ffffff;
+      transform: translateY(-50%);
+      will-change: transform;
+    }
+    .intro-text {
+      display: inline-block;
+      opacity: 0;
+      text-shadow: 0 0 10px rgba(255,255,255,0.38), 0 0 26px rgba(255,80,130,0.22);
+      animation:
+        introEnter  0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards,
+        introGlow   1.9s  ease-in-out 1.2s infinite,
+        introBreathe 2.6s ease-in-out 1.2s infinite alternate;
+    }
+    @keyframes introEnter {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes introGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.38), 0 0 26px rgba(255,80,130,0.22); }
+      50%      { text-shadow: 0 0 18px rgba(255,255,255,0.75), 0 0 46px rgba(255,45,85,0.5), 0 0 74px rgba(255,45,85,0.28); }
+    }
+    @keyframes introBreathe {
+      from { transform: scale(1); }
+      to   { transform: scale(1.05); }
+    }
+
+    /* ============================================================
+       STAGE + BALLOONS (CSS-drawn: oval + knot + string)
+       ============================================================ */
+    #stage {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #balloonLayer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 2; }
+
+    .balloon {
+      position: absolute;
+      bottom: -190px;
+      width: 64px;
+      height: 86px;
+      padding: 0;
+      animation: floatUp var(--dur, 18s) linear infinite;
+      animation-delay: var(--delay, 0s);
+      will-change: transform;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-125vh); }
+    }
+    .balloon-inner {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      animation: sway var(--sway, 6s) ease-in-out infinite alternate;
+    }
+    @keyframes sway {
+      from { transform: translateX(-13px) rotate(-4deg); }
+      to   { transform: translateX(13px) rotate(4deg); }
+    }
+    .balloon-body {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 12px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: radial-gradient(circle at 32% 26%, rgba(255,255,255,0.6), var(--c1) 38%, var(--c2) 82%);
+      box-shadow: 0 0 24px var(--glow), inset -8px -12px 22px rgba(0,0,0,0.28);
+    }
+    .balloon-knot {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      width: 12px;
+      height: 11px;
+      transform: translateX(-50%);
+      background: var(--c2);
+      clip-path: polygon(50% 0, 0 100%, 100% 100%);
+    }
+    .balloon-string {
+      position: absolute;
+      top: 83px;
+      left: 50%;
+      width: 2px;
+      height: 70px;
+      border-radius: 2px;
+      background: linear-gradient(rgba(255,255,255,0.55), rgba(255,255,255,0.04));
+    }
+    .balloon.popped { pointer-events: none; animation-play-state: paused; }
+    .balloon.popped .balloon-inner { animation: popAnim 0.3s ease-out forwards !important; }
+    @keyframes popAnim {
+      0%   { transform: scale(1);    opacity: 1; }
+      40%  { transform: scale(1.28); opacity: 1; }
+      100% { transform: scale(1.6);  opacity: 0; }
+    }
+
+    /* ---------- pop burst fx ---------- */
+    #stageFX { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 70; }
+    .burst {
+      position: fixed;
+      width: 30px; height: 30px;
+      border: 2px solid var(--bc, #fff);
+      border-radius: 50%;
+      animation: burstAnim 0.45s ease-out forwards;
+    }
+    @keyframes burstAnim {
+      from { transform: scale(0.4); opacity: 0.9; }
+      to   { transform: scale(3.4); opacity: 0; }
+    }
+    .shard {
+      position: fixed;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--bc, #fff);
+      animation: shardFly 0.5s ease-out forwards;
+    }
+    @keyframes shardFly {
+      from { transform: translate(0, 0) scale(1); opacity: 1; }
+      to   { transform: translate(var(--tx, 0), var(--ty, -40px)) scale(0.3); opacity: 0; }
+    }
+
+    /* ============================================================
+       CAKE — clean two tiers + plate + 3 candles (lower half)
+       ============================================================ */
+    #cakeWrap {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 3;
+      display: flex;
+      align-items: flex-end;             /* lower half of the viewport */
+      justify-content: center;
+      padding-bottom: 7%;
+      pointer-events: none;              /* taps pass through to the balloons */
+    }
+    .cake {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0 10px 34px rgba(255,45,85,0.32));
+    }
+
+    /* tiers: rounded rectangles, stacked with no gap */
+    .tier {
+      position: relative;
+      transform: scaleY(0);
+      transform-origin: bottom center;
+    }
+    .tier.in { animation: tierIn 0.75s cubic-bezier(0.25, 1.1, 0.4, 1) forwards; }
+    @keyframes tierIn {
+      0%   { transform: scaleY(0); }
+      62%  { transform: scaleY(1.07); }
+      82%  { transform: scaleY(0.97); }
+      100% { transform: scaleY(1); }
+    }
+    /* glaze band is baked into the gradient → corners always match */
+    .tier-bottom {
+      width: 216px;
+      height: 66px;
+      border-radius: 16px;
+      --frost: #ffdce6;
+      background: linear-gradient(180deg,
+        #ffdce6 0px, #ffdce6 15px,
+        #d92c58 21px, #93123a 100%);
+    }
+    .tier-top {
+      width: 150px;
+      height: 56px;
+      margin-top: -1px;                  /* sits exactly on the bottom tier */
+      border-radius: 13px;
+      z-index: 1;
+      --frost: #ff9db8;
+      background: linear-gradient(180deg,
+        #ff9db8 0px, #ff9db8 13px,
+        #fff3e0 19px, #f0c8a6 100%);
+    }
+    /* glaze drips hanging from each band */
+    .tier::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 8%;
+      right: 8%;
+      height: 30px;
+      background-image: radial-gradient(circle at 23px 6px, var(--frost) 12px, transparent 12.5px);
+      background-size: 46px 30px;
+      background-repeat: repeat-x;
+    }
+    /* small plate under the bottom tier */
+    .plate {
+      width: 250px;
+      height: 22px;
+      margin-top: -7px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center,
+        rgba(255,255,255,0.30) 0%,
+        rgba(255,255,255,0.10) 48%,
+        rgba(255,255,255,0.02) 68%,
+        transparent 75%);
+      opacity: 0;
+      transform: scale(0.55);
+    }
+    .plate.in {
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    /* ---------- 3 candles, evenly spaced on the top tier ---------- */
+    .candles {
+      display: flex;
+      justify-content: space-evenly;     /* centres at 25% / 50% / 75% */
+      width: 150px;
+      margin-bottom: -2px;               /* sticks sink into the top tier */
+      position: relative;
+      z-index: 5;
+    }
+    .candle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(10px) scale(0.75);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .candle.lit { opacity: 1; transform: none; }
+    /* thin pastel cylinders */
+    .stick {
+      position: relative;
+      width: 7px;
+      height: 34px;
+      border-radius: 4px;
+      box-shadow: inset -2px 0 3px rgba(0,0,0,0.12);
+    }
+    .stick::after {                       /* tiny wick */
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      width: 2px;
+      height: 5px;
+      transform: translateX(-50%);
+      background: #2e1a24;
+      border-radius: 1px;
+    }
+    .stick-pink  { background: linear-gradient(90deg, #f9dde8, #ffffff 45%, #edc2d2); }
+    .stick-lilac { background: linear-gradient(90deg, #f2edfa, #ffffff 45%, #d9cdec); }
+    .stick-cream { background: linear-gradient(90deg, #fcf2e5, #ffffff 45%, #ecd9bd); }
+    /* small oval yellow-orange flame */
+    .flame {
+      position: relative;
+      width: 44px;                        /* ≥ 44px touch target */
+      height: 46px;
+      margin-bottom: -6px;
+      pointer-events: auto;               /* only live part of the cake */
+      z-index: 2;
+    }
+    .flame::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 2px;
+      width: 13px;
+      height: 21px;
+      transform: translateX(-50%);
+      transform-origin: 50% 100%;
+      background: radial-gradient(circle at 50% 72%,
+        #fff7d6 0%, #ffd166 38%, #ff8c2e 70%, rgba(255,90,30,0) 100%);
+      border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+      box-shadow: 0 0 14px rgba(255,170,70,0.85), 0 0 30px rgba(255,120,50,0.4);
+      animation: flicker 1.15s ease-in-out infinite alternate;
+    }
+    .candle:nth-child(2) .flame::before { animation-duration: 0.95s; }
+    .candle:nth-child(3) .flame::before { animation-duration: 1.3s; }
+    @keyframes flicker {
+      0%   { transform: translateX(-50%) scale(1, 1); }
+      55%  { transform: translateX(-52%) scale(1.06, 0.93) rotate(-2deg); }
+      100% { transform: translateX(-48%) scale(0.94, 1.08) rotate(2.5deg); }
+    }
+    .flame.out::before {
+      animation: none;
+      opacity: 0;
+      filter: blur(4px);
+      transition: opacity 0.45s ease, filter 0.45s ease;
+    }
+    .smoke {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,200,210,0.55), rgba(200,200,210,0) 70%);
+      filter: blur(2px);
+      pointer-events: none;
+      z-index: 50;
+      animation: smokeUp 1.3s ease-out forwards;
+    }
+    @keyframes smokeUp {
+      from { transform: translateY(0) scale(0.6); opacity: 0.8; }
+      to   { transform: translateY(-64px) scale(1.8); opacity: 0; }
+    }
+
+    /* ============================================================
+       FALLING RIBBONS — the little celebration at the end
+       ============================================================ */
+    .ribbon-layer {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 60;
+      overflow: hidden;
+      transition: opacity 0.8s ease;
+    }
+    .ribbon-layer.fade { opacity: 0; }
+    .ribbon {
+      position: absolute;
+      top: -160px;
+      width: var(--w, 7px);
+      height: var(--h, 90px);
+      background: var(--c, #ff2d55);
+      border-radius: 3px;
+      opacity: 0.9;
+      animation: ribbonFall var(--dur, 2.6s) cubic-bezier(0.3, 0.4, 0.7, 0.6) forwards;
+    }
+    @keyframes ribbonFall {
+      0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+      8%   { opacity: 0.95; }
+      100% { transform: translate(var(--sway, 30px), calc(100vh + 240px)) rotate(var(--rot, 540deg)); opacity: 0.9; }
+    }
+
+    /* ---------- footer ---------- */
+    .p1-footer {
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    #continueBtn { margin-bottom: 4px; }
+
+    @media (max-height: 700px) {
+      .cake { transform: scale(0.85); transform-origin: bottom center; }
+      .p1-title { font-size: clamp(30px, 8.5vw, 42px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .streamer { animation: none; opacity: 0; }
+      .intro-text { animation-duration: 0.01s, 0.01s, 0.01s; }
+    }
+  </style>
+</head>
+<body>
+  <main id="mainPage" class="page bg-romantic veiled">
+    <header class="p1-header safe-top">
+      <h1 id="headTitle" class="script p1-title glow-white hidden-v">Happy Birthday<br>Dijuuuu</h1>
+      <p id="subText" class="p1-sub">This little universe was built for you. Start with the balloons, and then follow the path I've left behind.</p>
+    </header>
+
+    <div id="stage">
+      <div id="balloonLayer" aria-label="floating balloons"></div>
+
+      <div id="cakeWrap">
+        <div class="cake">
+          <div class="candles">
+            <div class="candle">
+              <button type="button" class="flame" aria-label="Blow out the first candle"></button>
+              <span class="stick stick-pink"></span>
+            </div>
+            <div class="candle">
+              <button type="button" class="flame" aria-label="Blow out the second candle"></button>
+              <span class="stick stick-lilac"></span>
+            </div>
+            <div class="candle">
+              <button type="button" class="flame" aria-label="Blow out the third candle"></button>
+              <span class="stick stick-cream"></span>
+            </div>
+          </div>
+          <div class="tier tier-top"></div>
+          <div class="tier tier-bottom"></div>
+          <div class="plate"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="p1-footer safe-bottom">
+      <p id="hint" class="hint">Tap the balloons to pop them, Dijuuu.</p>
+      <a id="continueBtn" class="btn-glow" href="page2.html">Continue</a>
+    </footer>
+  </main>
+
+  <!-- cinematic intro (exactly 4 s) -->
+  <div id="introTitle" class="script" aria-hidden="true"><span class="intro-text">Happy Birthday<br>Dijuuuu</span></div>
+  <div id="introOverlay" aria-hidden="true"></div>
+
+  <div id="stageFX" aria-hidden="true"></div>
+
+  <script src="js/balloons.js"></script>
+</body>
+</html>
